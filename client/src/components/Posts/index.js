@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { gql, useQuery } from '@apollo/client'
-import CreatePost from './CreatePost'
-import DeletePost from './DeletePost'
+import { Card, Avatar } from 'antd'
+import styled from 'styled-components'
+import DeletePost from '../DeletePost'
+import CreatePost from '../CreatePost'
+
+const { Meta } = Card
 
 const POSTS = gql`
 	query {
@@ -13,6 +17,11 @@ const POSTS = gql`
 	}
 `
 
+const StyledCard = styled(Card)`
+	width: auto !important;
+	margin: 20px;
+`
+
 export default function Posts() {
 	const [posts, setPosts] = useState()
 	const { loading, error, data } = useQuery(POSTS)
@@ -21,17 +30,31 @@ export default function Posts() {
 		if (data) setPosts(data.getPosts)
 	}, [data])
 
+	if (error) return 'Something went wrong!'
+
 	return (
 		<>
-			<>
-				{posts?.map(({ id, author, body }) => (
-					<div key={id}>
-						{body} - {author} {'     '}{' '}
-						<DeletePost posts={posts} setPosts={setPosts} postId={id} />
-					</div>
-				))}
-			</>
 			<CreatePost posts={posts} setPosts={setPosts} />
+			<div style={{ height: '50vh', overflow: 'scroll' }}>
+				{posts?.map(({ id, author, body }) => (
+					<StyledCard key={id} loading={loading}>
+						<Meta
+							avatar={
+								<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+							}
+							title={
+								<div
+									style={{ display: 'flex', justifyContent: 'space-between' }}
+								>
+									<div>{author}</div>
+									<DeletePost postId={id} posts={posts} setPosts={setPosts} />
+								</div>
+							}
+							description={body}
+						/>
+					</StyledCard>
+				))}
+			</div>
 		</>
 	)
 }

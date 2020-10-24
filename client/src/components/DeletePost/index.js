@@ -8,8 +8,7 @@ const DELETE_POST = gql`
 `
 
 export default function DeletePost({ postId, posts, setPosts }) {
-	const [deletePost, { data }] = useMutation(DELETE_POST)
-	console.log('postid ', postId)
+	const [deletePost] = useMutation(DELETE_POST)
 
 	return (
 		<div

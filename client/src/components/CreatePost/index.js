@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import { useMutation, gql } from '@apollo/client'
+import { Input, Button } from 'antd'
+
+const { TextArea } = Input
 
 const CREATE_POST = gql`
 	mutation CreatePost($author: String!, $body: String!) {
@@ -17,27 +20,44 @@ export default function CreatePost({ posts, setPosts }) {
 	const [createPost, { data }] = useMutation(CREATE_POST)
 
 	const handleSubmit = async () => {
-		const result = await createPost({ variables: { author, body: postBody } })
-		setPosts([...posts, result.data.createPost])
-		setAuthor('')
-		setPostBody('')
+		try {
+			const result = await createPost({ variables: { author, body: postBody } })
+			setPosts([result.data.createPost, ...posts])
+			setAuthor('')
+			setPostBody('')
+		} catch {
+			console.log('Something went wrong!')
+		}
 	}
 
 	return (
-		<>
+		<div style={{ margin: 20 }}>
 			<h3>Write New Post below!</h3>
-			<input
+			<Input
+				size="large"
 				value={author}
 				onChange={(e) => setAuthor(e.target.value)}
 				type="text"
 				placeholder="Enter your Name"
+				className="mt-20"
 			/>
-			<textarea
+			<TextArea
 				value={postBody}
 				onChange={(e) => setPostBody(e.target.value)}
 				placeholder="Write Your Post Here..."
+				className="mt-20"
+				rows={4}
 			/>
-			<button onClick={handleSubmit}>Submit</button>
-		</>
+			<div className="mt-20" style={{ textAlign: 'center' }}>
+				<Button
+					onClick={handleSubmit}
+					type="primary"
+					shape="round"
+					size={'large'}
+				>
+					Submit
+				</Button>
+			</div>
+		</div>
 	)
 }

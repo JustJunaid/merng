@@ -1,23 +1,24 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { ApolloClient, InMemoryCache } from '@apollo/client'
-import { gql } from '@apollo/client'
-import { ApolloProvider } from '@apollo/client'
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
+
+import './index.css'
+import Layout from './layout'
 import Posts from './components/Posts'
-import CreatePost from './components/Posts/CreatePost'
+import CreatePost from './components/CreatePost'
 
 const client = new ApolloClient({
-	uri: 'http://localhost:4000/',
+	uri: '/graphql',
 	cache: new InMemoryCache(),
 })
 
 function App() {
 	return (
 		<ApolloProvider client={client}>
-			<div>
-				<h2>My first Apollo app 🚀</h2>
-			</div>
-			<Posts />
+			<Layout>
+				{/* <CreatePost /> */}
+				<Posts />
+			</Layout>
 		</ApolloProvider>
 	)
 }
