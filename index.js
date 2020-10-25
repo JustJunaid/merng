@@ -50,6 +50,7 @@ const resolvers = {
 }
 
 const app = express()
+const PORT = process.env.PORT || 4000
 
 app.use(express.static(path.join(__dirname, 'client/build')))
 
@@ -68,9 +69,9 @@ mongoose
 	.connect(dbString, { useNewUrlParser: true, useUnifiedTopology: true })
 	.then(() => {
 		console.log('Database connected!')
-		app.listen({ port: process.env.PORT || 4000 }, () =>
+		app.listen(PORT, () =>
 			console.log(
-				`🚀 Server ready at http://localhost:4000${server.graphqlPath}`
+				`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
 			)
 		)
 	})
